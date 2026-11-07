@@ -60,44 +60,36 @@ Two players enter the arena with **10 marbles each**. The objective: claim all 2
 ## 🎮 Game Mechanics
 
 ```mermaid
-stateDiagram-v2
-    [*] --> PlayerRegistration
-    PlayerRegistration --> RoundStart : 10 Marbles Each
+flowchart TD
+    Start(["Game Start (10 Marbles Each)"]) --> RoundDecision{"Round Parity"}
 
-    state "Round Progression" as TurnLoop {
-        state "Odd Round: Player Attacks" as AttackPhase {
-            LeoHides : Leo secretly conceals X marbles
-            PlayerBets : Player selects wager (1 to Max)
-            PlayerGuesses : Player calls ODD or EVEN
-            LeoHides --> PlayerBets --> PlayerGuesses
-        }
-        state "Even Round: Leo Attacks" as DefensePhase {
-            PlayerHides : Player conceals X marbles in fist
-            LeoBets : Leo evaluates risk & wagers
-            LeoGuesses : Leo predicts ODD or EVEN
-            PlayerHides --> LeoBets --> LeoGuesses
-        }
-    }
+    subgraph AttackPhase ["Attack Phase (Odd Rounds)"]
+        A1["Leo secretly conceals X marbles"] --> A2["You choose wager (1 to Max)"]
+        A2 --> A3["You guess: ODD or EVEN"]
+    end
 
-    RoundStart --> AttackPhase : Round 1, 3, 5...
-    RoundStart --> DefensePhase : Round 2, 4, 6...
+    subgraph DefensePhase ["Defense Phase (Even Rounds)"]
+        D1["You conceal X marbles in fist"] --> D2["Leo calculates risk & bets"]
+        D2 --> D3["Leo guesses: ODD or EVEN"]
+    end
 
-    AttackPhase --> ResultEvaluation
-    DefensePhase --> ResultEvaluation
+    RoundDecision -- "Round 1, 3, 5..." --> AttackPhase
+    RoundDecision -- "Round 2, 4, 6..." --> DefensePhase
 
-    state "Result Evaluation" as ResultEvaluation {
-        CheckWin : Guess Matches Hidden Count parity?
-        TransferMarbles : Winner gains bet amount from loser
-        UpdateEmotion : Leo's expression & dialogue shift
-        CheckWin --> TransferMarbles --> UpdateEmotion
-    }
+    AttackPhase --> Eval["Outcome Evaluation"]
+    DefensePhase --> Eval
 
-    ResultEvaluation --> RoundStart : Both players have > 0 marbles
-    ResultEvaluation --> Victory : Leo Marbles == 0
-    ResultEvaluation --> Defeat : Player Marbles == 0
+    Eval --> Check{"Parity Match?"}
+    Check -- "Correct Guess" --> Win["Guesser wins wagered marbles"]
+    Check -- "Wrong Guess" --> Lose["Hider wins wagered marbles"]
 
-    Victory --> [*] : Gganbu King Accolade
-    Defeat --> [*] : Game Over
+    Win --> NextCheck{"Check Remaining Marbles"}
+    Lose --> NextCheck
+
+    NextCheck -- "Leo has 0 Marbles" --> Victory(["🏆 VICTORY: Gganbu King"])
+    NextCheck -- "Player has 0 Marbles" --> Defeat(["☠️ DEFEAT: Game Over"])
+    NextCheck -- "Both players have > 0" --> NextRound["Next Round (Swap Turns)"]
+    NextRound --> RoundDecision
 ```
 
 ### Turn Rules:
