@@ -6,7 +6,7 @@
   <br/><br/>
 
   <!-- BADGES ROW -->
-  <a href="#-quickstart"><img src="https://img.shields.io/badge/PLAY_NOW-Live_Web_Game-22d3ee?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Play Live" /></a>
+  <a href="https://dhruv-lx.github.io/ODDVEIL/"><img src="https://img.shields.io/badge/PLAY_NOW-Live_Web_Game-22d3ee?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Play Live" /></a>
   <a href="#-quickstart"><img src="https://img.shields.io/badge/JAVA-Desktop_GUI-f59e0b?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java GUI" /></a>
   <img src="https://img.shields.io/badge/AUDIO-Procedural_Synthesis-f43f5e?style=for-the-badge&logo=audacity&logoColor=white" alt="Audio Engine" />
   <img src="https://img.shields.io/badge/LICENSE-MIT-10b981?style=for-the-badge" alt="License" />
