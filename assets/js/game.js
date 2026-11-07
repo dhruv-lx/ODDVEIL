@@ -488,7 +488,56 @@ class MarbleGame {
     this.summaryStreak.textContent = this.highestStreak;
     this.summaryMaxBet.textContent = this.biggestBetWon;
 
+    if (victory) {
+      this.triggerConfetti();
+    }
+
     this.gameOverModal.classList.remove('hidden');
+  }
+
+  triggerConfetti() {
+    const canvas = document.getElementById('confettiCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = ['#22d3ee', '#f43f5e', '#fbbf24', '#a855f7', '#34d399'];
+    const particles = Array.from({ length: 90 }, () => ({
+      x: Math.random() * canvas.width,
+      y: -20,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * 50,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      tilt: Math.floor(Math.random() * 10) - 10,
+      tiltAngle: 0,
+      tiltAngleIncremental: (Math.random() * 0.07) + 0.05
+    }));
+
+    let animationFrame;
+    const render = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, idx) => {
+        p.tiltAngle += p.tiltAngleIncremental;
+        p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+        p.tilt = Math.sin(p.tiltAngle - (idx / 3)) * 15;
+
+        ctx.beginPath();
+        ctx.lineWidth = p.r / 2;
+        ctx.strokeStyle = p.color;
+        ctx.moveTo(p.x + p.tilt + (p.r / 4), p.y);
+        ctx.lineTo(p.x + p.tilt, p.y + p.tilt + (p.r / 4));
+        ctx.stroke();
+      });
+
+      if (particles.some(p => p.y < canvas.height)) {
+        animationFrame = requestAnimationFrame(render);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+    render();
   }
 
   resetGame() {
