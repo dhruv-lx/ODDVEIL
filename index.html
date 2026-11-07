@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Marble | A Psychological Duel</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow cyan"></div>
+  <div class="ambient-glow pink"></div>
+
+  <div class="app-container">
+    <!-- HEADER -->
+    <header class="game-header">
+      <div class="brand">
+        <div class="brand-badge">PSYCHOLOGICAL DUEL</div>
+        <h1>THE <span class="highlight">MARBLE</span></h1>
+      </div>
+
+      <div class="header-controls">
+        <div class="round-counter">
+          <span class="label">ROUND</span>
+          <span id="roundNumber" class="value">1</span>
+        </div>
+        <div class="streak-badge" id="streakBadge" title="Current Win Streak">
+          🔥 <span id="streakCount">0</span> Streak
+        </div>
+        <div class="difficulty-picker">
+          <label for="difficultySelect">AI Mode:</label>
+          <select id="difficultySelect">
+            <option value="casual">Casual Leo (Easy)</option>
+            <option value="strategic" selected>Strategic Leo (Normal)</option>
+            <option value="mindreader">Mind Reader (Hard)</option>
+          </select>
+        </div>
+        <button id="soundToggleBtn" class="icon-btn" title="Toggle Sound">🔊</button>
+        <button id="resetGameBtn" class="icon-btn danger" title="Restart Game">🔄</button>
+      </div>
+    </header>
+
+    <!-- MAIN BATTLE ARENA -->
+    <main class="arena">
+      <!-- LEO CARD (AI) -->
+      <section class="fighter-card leo-card">
+        <div class="fighter-header">
+          <div class="avatar-box">
+            <div id="leoAvatar" class="avatar-emoji">🤖</div>
+            <div class="status-indicator online"></div>
+          </div>
+          <div class="fighter-info">
+            <div class="name-row">
+              <h3>Leo</h3>
+              <span id="leoStatusTag" class="status-tag">Confident</span>
+            </div>
+            <p class="subtitle">AI Opponent • Gganbu Rival</p>
+          </div>
+          <div class="marble-counter-pill">
+            <span class="count" id="leoMarbleCount">10</span>
+            <span class="unit">Marbles</span>
+          </div>
+        </div>
+
+        <!-- Leo's Marble Pouch / Interactive Visuals -->
+        <div class="marble-pouch" id="leoPouch">
+          <!-- Marbles dynamically generated via JS -->
+        </div>
+
+        <!-- Leo's Dynamic Speech Bubble -->
+        <div class="speech-bubble">
+          <div class="bubble-arrow"></div>
+          <p id="leoDialogue">"Hello! I am Leo. Think you can win all 20 marbles from me? Place your bet!"</p>
+        </div>
+      </section>
+
+      <!-- ARENA CENTER DIVIDER / TURN INDICATOR -->
+      <div class="vs-divider">
+        <div class="vs-circle">VS</div>
+        <div class="turn-phase-pill" id="turnPhasePill">
+          YOUR TURN TO ATTACK
+        </div>
+      </div>
+
+      <!-- PLAYER CARD (YOU) -->
+      <section class="fighter-card player-card">
+        <div class="fighter-header">
+          <div class="avatar-box">
+            <div class="avatar-emoji">😎</div>
+            <div class="status-indicator player"></div>
+          </div>
+          <div class="fighter-info">
+            <div class="name-row">
+              <h3 id="playerNameDisplay">Player</h3>
+              <button id="editNameBtn" class="edit-name-btn" title="Change Name">✏️</button>
+            </div>
+            <p class="subtitle">Challenger • Bet Master</p>
+          </div>
+          <div class="marble-counter-pill player-pill">
+            <span class="count" id="playerMarbleCount">10</span>
+            <span class="unit">Marbles</span>
+          </div>
+        </div>
+
+        <!-- Player's Marble Pouch -->
+        <div class="marble-pouch" id="playerPouch">
+          <!-- Marbles dynamically generated via JS -->
+        </div>
+
+        <div class="player-tip-bar">
+          <span class="tip-icon">💡</span>
+          <span id="tipText">Odd rounds: You bet & guess. Even rounds: You hide marbles in your fist!</span>
+        </div>
+      </section>
+    </main>
+
+    <!-- ACTION CONTROL CONSOLE -->
+    <section class="control-console">
+      <div class="console-header">
+        <h4 id="actionTitle">Round 1: Place Your Bet & Make Your Call</h4>
+        <p id="actionSubtitle">Leo has concealed marbles in his closed fist. Choose your wager!</p>
+      </div>
+
+      <!-- ATTACK PHASE CONTROLS (Player Bets & Guesses) -->
+      <div id="attackControls" class="controls-group">
+        <div class="bet-selector-box">
+          <div class="bet-label-row">
+            <span>Your Bet Amount:</span>
+            <span class="bet-display" id="betDisplay">1 Marble</span>
+          </div>
+          <div class="slider-wrapper">
+            <input type="range" id="betSlider" min="1" max="10" value="1" step="1">
+            <div class="slider-markers">
+              <span>1</span>
+              <span id="maxBetMarker">10</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-choice-grid">
+          <button id="guessOddBtn" class="action-btn btn-odd">
+            <span class="btn-icon">⚡</span>
+            <div class="btn-text">
+              <span class="primary">ODD</span>
+              <span class="secondary">1, 3, 5, 7, 9...</span>
+            </div>
+          </button>
+          <button id="guessEvenBtn" class="action-btn btn-even">
+            <span class="btn-icon">🔮</span>
+            <div class="btn-text">
+              <span class="primary">EVEN</span>
+              <span class="secondary">2, 4, 6, 8, 10...</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- DEFENSE PHASE CONTROLS (Player Hides & Leo Guesses) -->
+      <div id="defenseControls" class="controls-group hidden">
+        <div class="bet-selector-box">
+          <div class="bet-label-row">
+            <span>Hide in your closed fist:</span>
+            <span class="bet-display" id="hideDisplay">1 Marble</span>
+          </div>
+          <div class="slider-wrapper">
+            <input type="range" id="hideSlider" min="1" max="10" value="1" step="1">
+            <div class="slider-markers">
+              <span>1</span>
+              <span id="maxHideMarker">10</span>
+            </div>
+          </div>
+        </div>
+        <button id="submitHideBtn" class="action-btn btn-gold">
+          <span class="btn-icon">✊</span>
+          <div class="btn-text">
+            <span class="primary">CLOSE FIST</span>
+            <span class="secondary">Leo will place his bet & guess!</span>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- FOOTER: MATCH LOG & STATS -->
+    <section class="stats-and-log">
+      <div class="log-card">
+        <div class="log-header">
+          <span>📜 Battle Feed</span>
+          <button id="clearLogBtn" class="tiny-btn">Clear</button>
+        </div>
+        <div class="log-stream" id="logStream">
+          <div class="log-entry system">
+            Game initialized. Both players start with 10 marbles. Let the duel begin!
+          </div>
+        </div>
+      </div>
+
+      <div class="achievements-card">
+        <div class="ach-header">
+          <span>🏆 Match Accolades</span>
+        </div>
+        <div class="badge-grid">
+          <div class="badge-item locked" id="badgeFirstWin" title="Win your first round">
+            <span class="b-icon">🎯</span>
+            <span class="b-name">First Blood</span>
+          </div>
+          <div class="badge-item locked" id="badgeStreak3" title="Win 3 rounds in a row">
+            <span class="b-icon">🔥</span>
+            <span class="b-name">On Fire (3x)</span>
+          </div>
+          <div class="badge-item locked" id="badgeHighRoller" title="Win a bet of 5 or more marbles">
+            <span class="b-icon">💎</span>
+            <span class="b-name">High Roller</span>
+          </div>
+          <div class="badge-item locked" id="badgeChampion" title="Win all 20 marbles">
+            <span class="b-icon">👑</span>
+            <span class="b-name">Gganbu King</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVEAL MODAL OVERLAY -->
+    <div id="revealModal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <div class="modal-glow" id="modalGlow"></div>
+        <div id="modalIcon" class="modal-icon">🎉</div>
+        <h2 id="modalTitle">ROUND WON!</h2>
+        <p id="modalDescription">Leo revealed 3 marbles (ODD). Your guess was correct!</p>
+        <div class="revealed-marbles-container" id="revealedMarblesRow">
+          <!-- Marbles in fist shown here -->
+        </div>
+        <div class="modal-points" id="modalPoints">+2 Marbles</div>
+        <button id="modalContinueBtn" class="action-btn modal-btn">Next Round ➔</button>
+      </div>
+    </div>
+
+    <!-- GAME OVER / VICTORY CELEBRATION MODAL -->
+    <div id="gameOverModal" class="modal-overlay hidden">
+      <div class="modal-box big">
+        <div id="gameOverIcon" class="modal-icon large">🏆</div>
+        <h1 id="gameOverTitle">YOU ARE THE ULTIMATE CHAMPION!</h1>
+        <p id="gameOverDesc">You conquered Leo and claimed all 20 marbles!</p>
+        <div class="stats-summary-grid">
+          <div class="summary-item">
+            <span class="lbl">Rounds Played</span>
+            <span class="val" id="summaryRounds">8</span>
+          </div>
+          <div class="summary-item">
+            <span class="lbl">Highest Streak</span>
+            <span class="val" id="summaryStreak">4</span>
+          </div>
+          <div class="summary-item">
+            <span class="lbl">Biggest Bet Won</span>
+            <span class="val" id="summaryMaxBet">6</span>
+          </div>
+        </div>
+        <button id="playAgainBtn" class="action-btn btn-gold modal-btn">Play Again ⚔️</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/game.js"></script>
+</body>
+</html>
+
